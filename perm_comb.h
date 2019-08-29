@@ -15,8 +15,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <type_traits>
 #include <vector>
+#include <sstream>
 
 namespace pelib
 {
@@ -48,27 +48,95 @@ T n_permute_k(T n, T k)
 }
 
 /**
- * This function gives all combinations from src and a given cnt, which cnt <= src.size()
+ * This function gives all *combinations* from src and a given cnt, which cnt <= src.size()
  * 
- * @params src
- * @params cnt
- * @return
+ * @params src all elements to generate *combinations*
+ * @params cnt how many elements do you want per trail
+ * @return how many trais do you have and how many elements in your trail
  * 
  * */
 template <typename T>
-std::vector<std::vector<T>> combination(std::vector<T> src, size_t cnt)
+std::vector<std::vector<T>> combination(const std::vector<T> &src, size_t cnt)
 {
-
+    assert(cnt <= src.size() && cnt >= 1);
+    std::vector<std::vector<T>> comb_trails;
+    std::vector<bool> bitset(src.size() - cnt, false);
+    bitset.resize(src.size(), true);
+    do
+    {
+        std::vector<T> trail;
+        for (std::size_t i = 0; i != src.size(); ++i)
+        {
+            if (bitset[i])
+            {
+                trail.push_back(src[i]);
+            }
+        }
+        comb_trails.push_back(trail);
+    } while (std::next_permutation(bitset.begin(), bitset.end()));
+    return comb_trails;
 }
 
 /**
  * This function gives all *permutations* from src and a given cnt, which cnt <= src.size()
- * 
+ * @params src all elements to generate *permutations*
+ * @params cnt how many elements do you want per trail
+ * @return how many trais do you have and how many elements in your trail
  * */
 template <typename T>
-std::vector<std::vector<T>> permutation(std::vector<T> src, size_t cnt)
+std::vector<std::vector<T>> permutation(const std::vector<T> &src, size_t cnt)
 {
-    
+    assert(cnt <= src.size() && cnt >= 1);
+    std::vector<std::vector<T>> perm_trails; // all permutations
+    std::vector<bool> bitset(src.size() - cnt, false);
+    bitset.resize(src.size(), true);
+    do
+    {
+        std::vector<T> comb_trail;
+        for (std::size_t i = 0; i != src.size(); ++i)
+        {
+            if (bitset[i])
+            {
+                comb_trail.push_back(src[i]);
+            }
+        }
+        // at here a combination is selected, then we totaly permuate it
+        do
+        {
+            perm_trails.push_back(comb_trail);
+        } while (std::next_permutation(comb_trail.begin(), comb_trail.end()));
+    } while (std::next_permutation(bitset.begin(), bitset.end()));
+    return perm_trails;
+}
+
+/**
+ * This function gives all *permutations* from src (without a given size , of course)
+ * @params src all elements to generate *permutations*
+ * @return how many trais do you have and how many elements in your trail
+ * @remark the function is equals to pelib::permutation(src, src.size());
+ * */
+template <typename T>
+std::vector<std::vector<T>> permutation(const std::vector<T> &src)
+{
+    //TODO at here
+}
+
+/**
+ * Convert a std::vector of a std::vector to std::string 
+ * @param vv the std::vector of std::vector to represent
+ * @return the string representation of the std::vector of std::vector
+ * */
+template <typename T>
+std::string vv_str(const std::vector<std::vector<T>> &vv)
+{
+    std::ostringstream oss;
+    for (const std::vector<T> &v : vv)
+    {
+        for (const T &t : v)
+            oss << t << " ";
+        oss << std::endl;
+    }
+    return oss.str();
 }
 
 } // namespace pelib
