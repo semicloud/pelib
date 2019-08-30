@@ -1,4 +1,5 @@
 #include "perm_comb.h"
+#include "prime.h"
 #include <iostream>
 
 int main(int argc, char **argv)
@@ -15,5 +16,11 @@ int main(int argc, char **argv)
     std::cout << pelib::vv_str(combinations);
     std::cout << "permutations:" << std::endl;
     std::cout << pelib::vv_str(permutations);
+    auto all_perm = pelib::permutation(src);
+    assert(all_perm.size() == 24);
+    std::cout << "all perm:" << std::endl;
+    std::cout << pelib::vv_str(all_perm);
+
+    std::cout << pelib::is_prime(11) << std::endl;
     return 0;
 }

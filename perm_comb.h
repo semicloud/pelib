@@ -58,7 +58,7 @@ T n_permute_k(T n, T k)
 template <typename T>
 std::vector<std::vector<T>> combination(const std::vector<T> &src, size_t cnt)
 {
-    assert(cnt <= src.size() && cnt >= 1);
+    assert(cnt <= src.size() && cnt >= 1 && src.size() > 0);
     std::vector<std::vector<T>> comb_trails;
     std::vector<bool> bitset(src.size() - cnt, false);
     bitset.resize(src.size(), true);
@@ -86,7 +86,7 @@ std::vector<std::vector<T>> combination(const std::vector<T> &src, size_t cnt)
 template <typename T>
 std::vector<std::vector<T>> permutation(const std::vector<T> &src, size_t cnt)
 {
-    assert(cnt <= src.size() && cnt >= 1);
+    assert(cnt <= src.size() && cnt >= 1 && src.size() > 0);
     std::vector<std::vector<T>> perm_trails; // all permutations
     std::vector<bool> bitset(src.size() - cnt, false);
     bitset.resize(src.size(), true);
@@ -118,7 +118,14 @@ std::vector<std::vector<T>> permutation(const std::vector<T> &src, size_t cnt)
 template <typename T>
 std::vector<std::vector<T>> permutation(const std::vector<T> &src)
 {
-    //TODO at here
+    assert(src.size() > 0);
+    auto src_cp(src);
+    std::vector<std::vector<T>> perm_trails;
+    do
+    {
+        perm_trails.push_back(src_cp);
+    } while (std::next_permutation(src_cp.begin(), src_cp.end()));
+    return perm_trails;
 }
 
 /**
